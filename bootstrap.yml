@@ -1,0 +1,27 @@
+---
+- hosts: all
+  tasks:
+  - name: Ensure group 'admin' exists
+    group:
+      name: admin 
+      state: present
+
+  - name: Add 'admin' group to the sudoers file
+    include_role:
+      name: andrewrothstein.sudoers
+    vars:
+      sudoers_groups:
+      - admin
+  
+  - name: Add the user 'athompson' with primary group of 'admin'
+    user:
+      name: athompson 
+      comment: Andrew Thompson 
+      shell: /bin/bash
+      group: admin
+  
+  - name: Set authorized key for user 'athompson' copying it from current user
+    authorized_key:
+      user: athompson 
+      state: present
+      key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa_github.pub') }}"

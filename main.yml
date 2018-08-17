@@ -1,0 +1,16 @@
+---
+- hosts: all
+  tasks:
+  - name: Add Unifi apt key
+    apt_key:
+      keyserver: keyserver.ubuntu.com
+      id: 06E85760C0A52C50
+
+  - name: Add Unifi apt repo
+    apt_repository:
+      repo: deb http://www.ubnt.com/downloads/unifi/debian stable ubiquiti
+      state: present
+
+  - name: Install unifi package
+    apt:
+      name: unifi
